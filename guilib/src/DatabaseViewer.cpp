@@ -1711,7 +1711,7 @@ void DatabaseViewer::updateIds()
 		previousPose=p;
 
 		//links
-		bool addPose = false;
+		bool addPose = links.find(ids_[i]) == links.end();
 		for(std::multimap<int, Link>::iterator jter=links.find(ids_[i]); jter!=links.end() && jter->first == ids_[i]; ++jter)
 		{
 			if(jter->second.type() == Link::kNeighborMerged)
@@ -4195,6 +4195,7 @@ void DatabaseViewer::update(int value,
 					gravityLink.begin()->second.transform().getEulerAngles(roll, pitch, yaw);
 					Eigen::Vector3d v = Transform(0,0,0,roll,pitch,0).toEigen3d() * -Eigen::Vector3d::UnitZ();
 					labelGravity->setText(QString("x=%1 y=%2 z=%3").arg(v[0]).arg(v[1]).arg(v[2]));
+					labelGravity->setToolTip(QString("roll=%1 pitch=%2 yaw=%3").arg(roll).arg(pitch).arg(yaw));
 				}
 
 				if(gps.stamp()>0.0)
@@ -7088,7 +7089,7 @@ bool DatabaseViewer::addConstraint(int from, int to, bool silent)
 		UWARN("Cannot add link to same node");
 		return false;
 	}
-	else if(from < to)
+	else if(from > to)
 	{
 		switchedIds = true;
 		int tmp = from;
@@ -7398,6 +7399,10 @@ bool DatabaseViewer::addConstraint(int from, int to, bool silent)
 		}
 		else
 		{
+			if(newLink.from() < newLink.to())
+			{
+				newLink = newLink.inverse();
+			}
 			linksAdded_.insert(std::make_pair(newLink.from(), newLink));
 		}
 		if(!silent)
