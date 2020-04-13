@@ -54,7 +54,7 @@ using namespace rtabmap;
 int main(int argc, char * argv[])
 {
 	ULogger::setType(ULogger::kTypeConsole);
-	ULogger::setLevel(ULogger::kWarning);
+	ULogger::setLevel(ULogger::kInfo);
 
 	int driver = 0;
 	if(argc < 2)
@@ -167,14 +167,13 @@ int main(int argc, char * argv[])
 	// We give it the camera so the GUI can pause/resume the camera
 	QApplication app(argc, argv);
 	MapBuilder mapBuilder(&cameraThread);
-
+	Odometry::Type type = Odometry::kTypeF2M;
 	// Create an odometry thread to process camera events, it will send OdometryEvent.
-	OdometryThread odomThread(Odometry::create());
+	OdometryThread odomThread(Odometry::create(type));
 
 
 	ParametersMap params;
-	//param.insert(ParametersPair(Parameters::kRGBDCreateOccupancyGrid(), "true")); // uncomment to create local occupancy grids
-
+	params.insert(ParametersPair(Parameters::kVisMaxFeatures(), "100")); // uncomment to create local occupancy grids
 	// Create RTAB-Map to process OdometryEvent
 	Rtabmap * rtabmap = new Rtabmap();
 	rtabmap->init(params);

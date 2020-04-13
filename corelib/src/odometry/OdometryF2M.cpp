@@ -96,6 +96,8 @@ OdometryF2M::OdometryF2M(const ParametersMap & parameters) :
 
 	Parameters::parse(parameters, Parameters::kIcpPointToPlaneK(), pointToPlaneK_);
 	Parameters::parse(parameters, Parameters::kIcpPointToPlaneRadius(), pointToPlaneRadius_);
+	int detectorStrategy = 6;
+	Parameters::parse(parameters, Parameters::kKpDetectorStrategy(), detectorStrategy);
 
 	UASSERT(bundleMaxFrames_ >= 0);
 	ParametersMap bundleParameters = parameters;
@@ -132,7 +134,8 @@ OdometryF2M::OdometryF2M(const ParametersMap & parameters) :
 		corType = 0;
 	}
 	uInsert(bundleParameters, ParametersPair(Parameters::kVisCorType(), uNumber2Str(corType)));
-
+	uInsert(bundleParameters, ParametersPair(Parameters::kVisMaxFeatures(), uNumber2Str(maxNewFeatures_)));
+	uInsert(bundleParameters, ParametersPair(Parameters::kKpDetectorStrategy(), uNumber2Str(detectorStrategy)));
 	regPipeline_ = Registration::create(bundleParameters);
 	if(bundleAdjustment_>0 && regPipeline_->isScanRequired())
 	{

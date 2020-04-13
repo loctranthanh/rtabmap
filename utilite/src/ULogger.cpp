@@ -55,7 +55,7 @@ bool ULogger::limitWhereLength_ = false;
 bool ULogger::buffered_ = false;
 ULogger::Level ULogger::level_ = kInfo; // By default, we show all info msgs + upper level (Warning, Error)
 ULogger::Level ULogger::eventLevel_ = kFatal;
-const char * ULogger::levelName_[5] = {"DEBUG", " INFO", " WARN", "ERROR", "FATAL"};
+const char * ULogger::levelName_[5] = {"D", "I", "W", "E", "F"};
 ULogger* ULogger::instance_ = 0;
 UDestroyer<ULogger> ULogger::destroyer_;
 ULogger::Type ULogger::type_ = ULogger::kTypeNoLog; // Default nothing
@@ -394,10 +394,10 @@ void ULogger::write(ULogger::Level level,
     	switch(level)
     	{
     	case kDebug:
-    		color = COLOR_GREEN;
+    		color = COLOR_NORMAL;
     		break;
     	case kInfo:
-    		color = COLOR_NORMAL;
+    		color = COLOR_GREEN;
     		break;
     	case kWarning:
     		color = COLOR_YELLOW;
